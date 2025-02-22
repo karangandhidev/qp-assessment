@@ -1,22 +1,40 @@
 import models from "../models/index";
 import { Request, Response } from "express";
 import { catchAsync } from "../utils/catchAsync";
+import ApiError from "../utils/ApiError";
+import { StatusCodes } from "http-status-codes";
 
 export const createOrder = catchAsync(async (req: Request, res: Response) => {
-  const { userId, totalAmount, items } = req.body;
+  const { userId, items } = req.body;
+  let totalAmount = 0;
 
+  for (const item of items) {
+    const groceryItem = await models.grocery.getGroceriesById(
+      item.groceryItemId
+    );
+    if (item.quantity > groceryItem[0].inventory) {
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `Insufficient Inventory for ${groceryItem[0].name} (Inventory: ${groceryItem[0].inventory} , ordered:${item.quantity})`
+      );
+    }
+    totalAmount += item.quantity * groceryItem[0].price;
+  }
   const order = await models.orders.createOrder(userId, totalAmount);
 
   for (const item of items) {
+    const groceryItem = await models.grocery.getGroceriesById(
+      item.groceryItemId
+    );
     await models.orderItems.createOrderItem(
-      order.id,
+      order[0].insertId,
       item.groceryItemId,
       item.quantity,
-      item.itemPrice
+      groceryItem[0].price
     );
   }
 
-  return res.status(201).json({ message: "Order placed successfully", order });
+  return res.status(201).json({ message: "Order placed successfully" });
 });
 
 export const getAllOrders = catchAsync(async (_req: Request, res: Response) => {

@@ -6,15 +6,23 @@ export const createGrocery = async (
   price: number,
   inventory: number
 ) => {
-  const result = await db.query(
-    "INSERT INTO GroceryItems (name, description, price, inventory) VALUES (?, ?, ?, ?) RETURNING *",
+  const [result] = await db.query(
+    "INSERT INTO GroceryItems (name, description, price, inventory) VALUES (?, ?, ?, ?)",
     [name, description, price, inventory]
   );
   return result; // Returning the newly created grocery item
 };
 
 export const getAllGroceries = async () => {
-  const result = await db.query("SELECT * FROM GroceryItems");
+  const [result] = await db.query("SELECT * FROM GroceryItems");
+  return result;
+};
+
+export const getGroceriesById = async (id: number) => {
+  const [result]: any = await db.query(
+    "SELECT * FROM GroceryItems where id = ?",
+    [id]
+  );
   return result;
 };
 
@@ -28,7 +36,7 @@ export const updateGrocery = async (
   }
 ) => {
   const { name, description, price, inventory } = data;
-  const result = await db.query(
+  const [result] = await db.query(
     `UPDATE GroceryItems 
      SET name = COALESCE(?, name), 
          description = COALESCE(?, description), 
