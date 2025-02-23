@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import pick from "../utils/pick";
 import ApiError from "../utils/ApiError";
 import { NextFunction, Request, Response } from "express";
+
 const validate =
   (schema: any) => (req: Request, res: Response, next: NextFunction) => {
     const validSchema = pick(schema, ["params", "query", "body"]);

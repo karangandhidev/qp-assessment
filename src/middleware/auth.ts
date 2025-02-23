@@ -3,6 +3,7 @@ import ApiError from "../utils/ApiError";
 import { rights } from "./roles";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+
 export interface AuthenticatedRequest extends Request {
   loginId?: number;
   userRole?: string;
