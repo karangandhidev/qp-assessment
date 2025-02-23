@@ -7,14 +7,18 @@ import auth from "../middleware/auth";
 const router = Router();
 
 router.post(
-  "/createOrder",
+  "/create/order",
   auth("usercreate"),
   validate(validations.orders.createOrder),
   controllers.orders.createOrder
 );
 
 router.get("/list", auth("adminget"), controllers.orders.getAllOrders);
-router.get("/:userId", auth("userget"), controllers.orders.getOrdersByUser);
-router.delete("/:id", auth("userdelete"), controllers.orders.deleteOrder);
+router.get("/get/:userId", auth("userget"), controllers.orders.getOrdersByUser);
+router.delete(
+  "/delete/:id",
+  auth("userdelete"),
+  controllers.orders.deleteOrder
+);
 
 export default router;

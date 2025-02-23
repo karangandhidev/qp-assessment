@@ -7,7 +7,7 @@ import auth from "../middleware/auth";
 const router = Router();
 
 router.post(
-  "/createGrocery",
+  "/create/grocery",
   auth("admincreate"),
   validate(validations.grocery.createGrocery),
   controllers.grocery.createGrocery
@@ -23,7 +23,7 @@ router.put(
 );
 
 router.delete(
-  "/:id",
+  "/delete/:id",
   auth("admindelete"),
   validate(validations.grocery.deleteGrocery),
   controllers.grocery.deleteGrocery

@@ -9,7 +9,6 @@ export const createOrder = {
         joi.object({
           groceryItemId: joi.number().required(),
           quantity: joi.number().min(1).required(),
-          itemPrice: joi.number().min(0),
         })
       )
       .required(),

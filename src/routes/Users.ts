@@ -5,14 +5,19 @@ import controllers from "../controllers";
 import auth from "../middleware/auth";
 const router = Router();
 router.post(
-  "/createUser",
+  "/create/user",
   validate(validations.users.createUser),
   controllers.users.createUser
 );
-router.delete("/:id", auth("admindelete"), controllers.users.deleteUserById);
-export default router;
+router.delete(
+  "/delete/:id",
+  auth("admindelete"),
+  controllers.users.deleteUserById
+);
 router.post(
   "/login",
   validate(validations.users.createUser),
   controllers.users.login
 );
+
+export default router;
