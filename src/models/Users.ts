@@ -2,10 +2,31 @@ import db from "../../db";
 import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError";
 import { StatusCodes } from "http-status-codes";
+
 export const createUser = async (
   username: string,
   password: string,
-  role = "User"
+  role = "user"
+) => {
+  const salt = bcrypt.genSaltSync(12);
+  password = bcrypt.hashSync(password, salt);
+  const [result]: any = await db.query(
+    "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+    [username, password, role]
+  );
+
+  const insertedId = result.insertId;
+  const [user] = await db.query(
+    `Select username, role from ${process.env.db_name}.users where id = ${insertedId}`
+  );
+
+  return user;
+};
+
+export const createAdmin = async (
+  username: string,
+  password: string,
+  role = "admin"
 ) => {
   const salt = bcrypt.genSaltSync(12);
   password = bcrypt.hashSync(password, salt);
