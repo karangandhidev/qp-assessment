@@ -3,9 +3,13 @@ import ApiError from "../utils/ApiError";
 import { rights } from "./roles";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
+export interface AuthenticatedRequest extends Request {
+  loginId?: number;
+  userRole?: string;
+}
 const auth =
-  (access: any) => (req: Request, res: Response, next: NextFunction) => {
+  (access: any) =>
+  (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const token = String(req.headers.authorization).split(" ")[1];
     if (!token) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid Authentication");
@@ -18,6 +22,8 @@ const auth =
     if (!user_rights.includes(access)) {
       throw new ApiError(StatusCodes.FORBIDDEN, "Invalid Authentication");
     }
+    req.loginId = verified.id;
+    req.userRole = verified.role;
     next();
   };
 

@@ -9,7 +9,7 @@ router.post(
   validate(validations.users.createUser),
   controllers.users.createUser
 );
-router.delete("/:id", auth("delete"), controllers.users.deleteUserById);
+router.delete("/:id", auth("admindelete"), controllers.users.deleteUserById);
 export default router;
 router.post(
   "/login",

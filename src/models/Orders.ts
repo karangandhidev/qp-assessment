@@ -5,7 +5,7 @@ export const createOrder = async (userId: number, totalAmount: number) => {
     "INSERT INTO orders (user_id, total_amount) VALUES (?, ?)",
     [userId, totalAmount]
   );
-  return result; // Returning the newly created order
+  return result;
 };
 
 export const getAllOrders = async () => {
@@ -59,6 +59,11 @@ export const getOrdersByUser = async (userId: number) => {
   GROUP BY O.id`,
     [userId]
   );
+  return result;
+};
+
+export const getOrdersById = async (id: number) => {
+  const [result] = await db.query(`SELECT * from Orders WHERE id = ?`, [id]);
   return result;
 };
 

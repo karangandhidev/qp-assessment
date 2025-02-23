@@ -8,23 +8,23 @@ const router = Router();
 
 router.post(
   "/createGrocery",
-  auth("create"),
+  auth("admincreate"),
   validate(validations.grocery.createGrocery),
   controllers.grocery.createGrocery
 );
 
-router.get("/list", auth("get"), controllers.grocery.getGroceries);
+router.get("/list", auth("userget"), controllers.grocery.getGroceries);
 
 router.put(
   "/update/:id",
-  auth("update"),
+  auth("adminupdate"),
   validate(validations.grocery.updateGrocery),
   controllers.grocery.updateGrocery
 );
 
 router.delete(
-  "/delete/:id",
-  auth("delete"),
+  "/:id",
+  auth("admindelete"),
   validate(validations.grocery.deleteGrocery),
   controllers.grocery.deleteGrocery
 );

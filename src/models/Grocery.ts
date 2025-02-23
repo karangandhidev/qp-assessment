@@ -46,7 +46,29 @@ export const updateGrocery = async (
      WHERE id = ? RETURNING *`,
     [name, description, price, inventory, id]
   );
-  return result; // Returning the updated grocery item
+  return result;
+};
+
+export const adjustGrocery = async (
+  groceryItemId: number,
+  quantity: number
+) => {
+  const [groceryItem]: any = await db.query(
+    "SELECT inventory FROM groceryItems WHERE id = ?",
+    [groceryItemId]
+  );
+  if (!groceryItem.length) {
+    return false;
+  }
+  const currentInventory = groceryItem[0].inventory;
+  if (quantity > currentInventory) {
+    return false;
+  }
+  await db.query(
+    "UPDATE groceryItems SET inventory = inventory - ? WHERE id = ?",
+    [quantity, groceryItemId]
+  );
+  return true;
 };
 
 export const deleteGrocery = async (id: number) => {
